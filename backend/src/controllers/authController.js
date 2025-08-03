@@ -12,17 +12,32 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { telephone, password } = req.body;
+    console.log("📥 Tentative de login :", { telephone, password });
+
     const user = await User.findOne({ telephone });
-    if (!user) return res.status(401).json({ message: 'Téléphone inconnu' });
+    if (!user) {
+      console.log("❌ Téléphone inconnu :", telephone);
+      return res.status(401).json({ message: 'Téléphone inconnu' });
+    }
+
+    console.log("🔍 Utilisateur trouvé :", user.telephone);
+
     const valid = await bcrypt.compare(password, user.password);
-    if (!valid) return res.status(401).json({ message: 'Mot de passe incorrect' });
+    if (!valid) {
+      console.log("❌ Mot de passe incorrect pour :", telephone);
+      return res.status(401).json({ message: 'Mot de passe incorrect' });
+    }
+
+    console.log("✅ Authentification réussie pour :", telephone);
+
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '8h' });
     res.json({ token });
   } catch (err) {
-    console.error(err);
+    console.error("🔥 Erreur serveur lors du login :", err);
     res.status(500).json({ message: 'Erreur serveur lors du login' });
   }
 };
+
 export const getProfile = (req, res) => {
   try {
     const user = req.user;  // req.user sera rempli par le middleware JWT
