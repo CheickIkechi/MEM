@@ -1,23 +1,30 @@
-// src/pages/Gestionnaire/TransfertPropriete.jsx
 import { useState } from 'react';
 import api from '../../api/api';
 import { Repeat, Key } from 'lucide-react';
 
 const TransfertPropriete = () => {
   const [enginId, setEnginId] = useState('');
-  const [oldProprioId, setOldProprioId] = useState('');
-  const [newProprioId, setNewProprioId] = useState('');
+  const [oldProprioTel, setOldProprioTel] = useState('');
+  const [newProprioTel, setNewProprioTel] = useState('');
   const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage('');
+    setError('');
     try {
-      await api.post('/transferts', { enginId, oldProprioId, newProprioId });
-      setMessage('Transfert effectué avec succès');
-      setEnginId(''); setOldProprioId(''); setNewProprioId('');
-    // eslint-disable-next-line no-unused-vars
+      const res = await api.post('/transferts', { enginId, oldProprioTel, newProprioTel });
+      setMessage(res.data.message);
+      setEnginId('');
+      setOldProprioTel('');
+      setNewProprioTel('');
     } catch (err) {
-      setMessage('Erreur lors du transfert');
+      if (err.response && err.response.data && err.response.data.error) {
+        setError(err.response.data.error);  // Message d’erreur du backend
+      } else {
+        setError('Erreur lors du transfert.');
+      }
     }
   };
 
@@ -28,6 +35,7 @@ const TransfertPropriete = () => {
           <Repeat className="mr-2 text-blue-600" /> Transfert de Propriété
         </h2>
         {message && <p className="text-center text-green-600">{message}</p>}
+        {error && <p className="text-center text-red-600">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="relative">
             <Key className="absolute top-3 left-3 text-gray-400" />
@@ -42,17 +50,17 @@ const TransfertPropriete = () => {
           </div>
           <input
             type="text"
-            placeholder="ID Ancien Propriétaire"
-            value={oldProprioId}
-            onChange={e => setOldProprioId(e.target.value)}
+            placeholder="Téléphone Ancien Propriétaire"
+            value={oldProprioTel}
+            onChange={e => setOldProprioTel(e.target.value)}
             className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
           <input
             type="text"
-            placeholder="ID Nouveau Propriétaire"
-            value={newProprioId}
-            onChange={e => setNewProprioId(e.target.value)}
+            placeholder="Téléphone Nouveau Propriétaire"
+            value={newProprioTel}
+            onChange={e => setNewProprioTel(e.target.value)}
             className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />

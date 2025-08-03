@@ -24,7 +24,7 @@ const handleSubmit = async (e) => {
     } else if (user.role === 'gestionnaire') {
       navigate('/gestionnaire/transfert');
     } else {
-      navigate('/');  // fallback en cas d'erreur
+      navigate('/dashboard');  // fallback en cas d'erreur
     }
 
   // eslint-disable-next-line no-unused-vars
@@ -40,8 +40,11 @@ const handleSubmit = async (e) => {
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded-2xl shadow-lg w-80 space-y-6"
       >
-        <h2 className="text-3xl font-extrabold text-center text-gray-800">
-          MEM Secure Login
+        <h2 className="text-2xl font-extrabold text-center text-gray-800">
+          Mon Engin Mali
+        </h2>
+        <h2 className="text-xl font-extrabold text-center text-gray-800">
+          Connexion 
         </h2>
 
         {error && <p className="text-red-500 text-sm text-center">{error}</p>}

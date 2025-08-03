@@ -6,25 +6,24 @@ import HistoriqueAction from '../models/HistoriqueAction.js';
  * @param {string} actionName - Le nom de l'action (ex: "Enregistrement Engin").
  * @returns {Function} Middleware Express.
  */
-const logger = (actionName) => async (req, res, next) => {
-res.on('finish', async () => {
-  if (res.statusCode < 400 && req.user) {
-    try {
-      await HistoriqueAction.create({
-        user: req.user._id,
-        action: actionName,
-        engin: req.body.engin // ou ce que tu veux logguer
-      })
-    } catch (err) {
-      console.error('Erreur lors de la création de l’historique:', err)
+
+const logger = (actionName) => (req, res, next) => {
+  res.on('finish', async () => {
+    // On ne logge que si req.user existe ET que la réponse est OK
+    if (req.user && res.statusCode < 400) {
+      try {
+        await HistoriqueAction.create({
+          user: req.user._id,
+          action: actionName,
+          engin: req.body.enginId    // ← match exactement la propriété envoyée
+        });
+      } catch (err) {
+        console.error('Erreur création historique:', err);
+      }
     }
-  } else {
-    console.warn('Logger ignoré : utilisateur non authentifié ou statusCode >= 400')
-  }
-})
-
-
+  });
   next();
 };
 
 export default logger;
+

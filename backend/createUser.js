@@ -13,9 +13,9 @@ const createUser = async () => {
     const user = await User.create({
       nom: 'gestionnaire',
       prenom: 'Test',
-      telephone: '71111111',
+      telephone: '73333333',
       password: hashedPassword,
-      role: 'police' // Change en 'police' ou 'gestionnaire' selon le besoin
+      role: 'agent' // Change en 'police' ou 'gestionnaire' selon le besoin
     });
 
     console.log('Utilisateur créé avec succès:', user);
