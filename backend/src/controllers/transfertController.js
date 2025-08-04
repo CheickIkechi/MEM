@@ -4,36 +4,33 @@ import Proprietaire from '../models/Proprietaire.js';
 import Tracabilite from '../models/TracabilitePropriete.js';
 
 export const transferer = async (req, res) => {
-  const { enginId, oldProprioTel, newProprioTel } = req.body;
+  const { enginId, oldProprioTel, newProprioData } = req.body;
 
   // 1. Vérifie si l’Engin existe
   const engin = await Engin.findById(enginId).populate('proprietaire');
-  if (!engin) {
-    return res.status(404).json({ error: 'Engin non trouvé dans nos bases.' });
-  }
+  if (!engin) return res.status(404).json({ error: 'Engin non trouvé.' });
 
-  // 2. Vérifie si le proprio actuel correspond au numéro fourni
+  // 2. Vérifie numéro proprio actuel
   if (engin.proprietaire.telephone !== oldProprioTel) {
-    return res.status(400).json({ error: 'Le numéro du propriétaire actuel ne correspond pas.' });
+    return res.status(400).json({ error: 'Téléphone actuel ne correspond pas.' });
   }
 
-  // 3. Vérifie si le nouveau propriétaire existe
-  let newProprio = await Proprietaire.findOne({ telephone: newProprioTel });
+  // 3. Nouveau proprio : recherche ou création complète
+  let newProprio = await Proprietaire.findOne({ numeroPiece: newProprioData.numeroPiece });
   if (!newProprio) {
-    // Si le nouveau proprio n’existe pas, crée-le (ou retourne une erreur selon ta logique)
-    newProprio = await Proprietaire.create({ telephone: newProprioTel });
+    newProprio = await Proprietaire.create(newProprioData);
   }
 
-  // 4. Effectuer le transfert
+  // 4. Transfert
   engin.proprietaire = newProprio._id;
   await engin.save();
 
-  // 5. Tracer la propriété
+  // 5. Historique
   await Tracabilite.create({
     engin: engin._id,
     fromProprietaire: engin.proprietaire._id,
     toProprietaire: newProprio._id
   });
 
-  return res.json({ message: 'Transfert effectué avec succès.', engin });
+  return res.json({ message: 'Transfert réussi.', engin });
 };

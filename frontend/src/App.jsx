@@ -12,8 +12,8 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/dasboard" element={<Dashboard />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Dashboard />} />
           <Route path="/agent/engins" element={
             <ProtectedRoute allowedRoles={['agent']}>
               <EnregistrerEngin />
