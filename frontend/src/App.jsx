@@ -4,13 +4,14 @@ import EnregistrerEngin from './pages/Agent/EnregistrerEngin';
 import GestionVols from './pages/Police/GestionVols';
 import TransfertPropriete from './pages/Gestionnaire/TransfertPropriete';
 import ProtectedRoute from './components/ProtectedRoute';
-import { AuthProvider } from './Contexts/AuthContext';
 import Login from './pages/Login';
+import { AuthProvider } from './Contexts/AuthContext';
 
 function App() {
   return (
+          <BrowserRouter>
+
     <AuthProvider>
-      <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Dashboard />} />
@@ -30,8 +31,9 @@ function App() {
             </ProtectedRoute>
           } />
         </Routes>
-      </BrowserRouter>
     </AuthProvider>
+          </BrowserRouter>
+
   );
 }
 

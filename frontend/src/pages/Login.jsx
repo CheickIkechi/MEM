@@ -1,8 +1,8 @@
 // src/pages/Login.jsx
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
 import { Lock, Phone } from 'lucide-react';
+import { useAuth } from '../Contexts/AuthContext';
 
 const Login = () => {
   const { login } = useAuth();
@@ -21,7 +21,7 @@ const Login = () => {
     try {
       const user = await login(telephone, password);
       if (user.role !== intendedRole) {
-        setError(`Accès interdit : ce compte n'est pas de type "${intendedRole}"`);
+        setError(`Accès interdit : Compte "${intendedRole} " requis`);
         return;
       }
       // Si tout va bien, redirige direct vers la page dédiée

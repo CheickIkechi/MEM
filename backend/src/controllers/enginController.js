@@ -38,12 +38,26 @@ export const createEngin = async (req, res) => {
 };
 
 export const searchEngin = async (req, res) => {
-  const engin = await Engin.findOne({ numeroIdentification: req.params.num });
-  if (!engin) return res.status(404).json({ message: 'Engin non trouvé' });
+  const numero = req.params.num.trim();
+  console.log('Recherche Engin avec numéro:', numero);
+
+  const engin = await Engin.findOne({ numeroIdentification: numero }).populate('proprietaire');
+  if (!engin) {
+    console.log('❌ Aucun engin trouvé pour ce numéro');
+    return res.status(404).json({ message: 'Engin non trouvé' });
+  }
+
+  if (!engin.proprietaire) {
+    console.log('⚠️ Propriétaire manquant pour cet engin');
+  }
+
+  console.log('✅ Engin trouvé:', engin);
   res.json(engin);
 };
 
+
 export const updateStatut = async (req, res) => {
-  const engin = await Engin.findByIdAndUpdate(req.params.id, { statut: req.body.statut }, { new: true });
+  const engin = await Engin.findByIdAndUpdate(req.params.id, { statut: req.body.statut }, { new: true })
+    .populate('proprietaire');
   res.json(engin);
 };

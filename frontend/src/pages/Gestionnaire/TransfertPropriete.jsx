@@ -1,9 +1,12 @@
 // src/pages/Agent/TransfertPropriete.jsx
 import { useState } from 'react';
 import api from '../../api/api';
-import { Repeat, Key, User, BadgeCheck, Phone, Home } from 'lucide-react';
+import { Repeat, Key, User, BadgeCheck, Phone, Home, LogOut } from 'lucide-react';
+import { useAuth } from '../../Contexts/AuthContext';
 
 const TransfertPropriete = () => {
+      const {  logout } = useAuth()
+    
   const [numeroIdent, setNumeroIdent] = useState('');
   const [engin, setEngin] = useState(null);
   const [newProprioData, setNewProprioData] = useState({
@@ -19,7 +22,6 @@ const TransfertPropriete = () => {
       const { data } = await api.get(`/engins/${numeroIdent}`);
       setEngin(data);
       // Pré-remplir le champ telephone pour ancien proprio
-      setNewProprioData(prev => ({ ...prev, telephone: data.proprietaire.telephone }));
     } catch {
       setError('Engin non trouvé');
     }
@@ -51,35 +53,44 @@ const TransfertPropriete = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center p-6 space-y-6">
-      <h2 className="text-2xl font-bold text-gray-800 flex items-center">
-        <Repeat className="mr-2 text-blue-600" /> Transfert de Propriété
-      </h2>
+return (
+  <div className="relative min-h-screen w-full bg-cover bg-center flex items-center justify-center" style={{ backgroundImage: "url('/case.jpg')" }}>
+    {/* Overlay sombre */}
+    <div className="absolute inset-0 bg-black bg-opacity-70"></div>
 
-      <div className="w-full max-w-md">
-        <div className="relative mb-4">
+    <div className="relative z-10 w-full max-w-xl p-6 space-y-6 text-white">
+      <div className="flex justify-between items-center mb-6">
+        <h5 className="text-3xl font-bold flex items-center">
+          <Repeat className="mr-2 text-blue-400 text-lg" /> Transfert de Propriété
+        </h5>
+        <button onClick={logout} className="text-red-400 hover:text-red-600">
+          <LogOut />
+        </button>
+      </div>
+
+      <div className="space-y-4">
+        <div className="relative">
           <Key className="absolute top-3 left-3 text-gray-400" />
           <input
             type="text"
             placeholder="Numéro Identification"
             value={numeroIdent}
             onChange={e => setNumeroIdent(e.target.value)}
-            className="w-full pl-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-black"
           />
         </div>
         <button onClick={rechercherEngin} className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
           Rechercher Engin
         </button>
-        {error && <p className="mt-2 text-red-500">{error}</p>}
+        {error && <p className="text-red-300">{error}</p>}
       </div>
 
       {engin && (
-        <div className="bg-white p-6 rounded-2xl shadow-md w-full max-w-lg space-y-6">
+        <div className="bg-white bg-opacity-90 p-6 rounded-2xl shadow space-y-6 text-black">
           <div>
-            <p><strong>Engin:</strong> {engin.numeroIdentification}</p>
-            <p><strong>Proprio actuel:</strong> {engin.proprietaire.nom} {engin.proprietaire.prenom}</p>
-            <p><strong>Téléphone actuel:</strong> {engin.proprietaire.telephone}</p>
+            <p><strong>Engin :</strong> {engin.numeroIdentification}</p>
+            <p><strong>Proprio actuel :</strong> {engin.proprietaire.nom} {engin.proprietaire.prenom}</p>
+            <p><strong>Téléphone actuel :</strong> {engin.proprietaire.telephone}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -126,7 +137,9 @@ const TransfertPropriete = () => {
         </div>
       )}
     </div>
-  );
+  </div>
+);
+
 };
 
 export default TransfertPropriete;

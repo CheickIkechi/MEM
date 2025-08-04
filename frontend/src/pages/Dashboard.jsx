@@ -12,19 +12,20 @@ const Dashboard = () => {
       desc: 'Enregistrer des engins',
       bg: 'bg-green-600 hover:bg-green-700'
     },
-    {
-      role: 'police',
-      icon: <ShieldCheck className="w-8 h-8" />,
-      label: 'Police',
-      desc: 'Gérer les vols',
-      bg: 'bg-red-600 hover:bg-red-700'
-    },
+
     {
       role: 'gestionnaire',
       icon: <Repeat className="w-8 h-8" />,
       label: 'Gestionnaire',
       desc: 'Transférer une propriété',
-      bg: 'bg-blue-600 hover:bg-blue-700'
+      bg: 'bg-yellow-500 hover:bg-yellow-600'
+    },
+    {
+      role: 'police',
+      icon: <ShieldCheck className="w-8 h-8" />,
+      label: 'Contrôle',
+      desc: 'Gérer les cas suspects',
+      bg: 'bg-red-600 hover:bg-red-700'
     }
   ];
 

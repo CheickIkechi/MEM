@@ -1,10 +1,13 @@
 // src/pages/Agent/EnregistrerEngin.jsx
 import { useState } from 'react';
 import api from '../../api/api';
-import { Truck, Phone, Hash, User, BadgeCheck, Home } from 'lucide-react';
+import { Truck, Phone, Hash, User, BadgeCheck, Home, LogOut } from 'lucide-react';
 import { brandsByType } from '../../constant/brands';
+import { useAuth } from '../../Contexts/AuthContext';
 
 const EnregistrerEngin = () => {
+          const {  logout } = useAuth()
+    
   const [data, setData] = useState({
     numeroIdentification: '',
     typeTransport: 'moto',
@@ -41,18 +44,25 @@ const EnregistrerEngin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-      <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-xl space-y-6">
-        <h2 className="text-2xl font-bold text-gray-800 flex items-center"><Truck className="mr-2 text-green-600" /> Enregistrer un Engin</h2>
+    <div className="relative min-h-screen  bg-cover bg-center" style={{ backgroundImage: "url('/bamako.jpg')" }}>
+        
+      <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-xl space-y-6 bg-black bg-opacity-60">
+                        <button className="text-red-500"  onClick={logout}>
+                  <LogOut /> 
+                </button>
+        <h2 className="text-2xl font-bold text-white flex items-center"><Truck className="mr-2 text-green-600" /> Enregistrer un Engin</h2>
+
         {feedback.error && <p className="text-red-500">{feedback.error}</p>}
         {feedback.success && <p className="text-green-600">{feedback.success}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Engin */}
-          <div className="flex space-x-4">
+                    <h3 className="text-xl text-white font-semibold">Informations de l'engins</h3>
             <div className="relative flex-1">
               <Hash className="absolute top-3 left-3 text-gray-400" />
               <input type="text" placeholder="Numéro Identification" value={data.numeroIdentification} onChange={e => handleChange('numeroIdentification', e.target.value)} className="w-full pl-10 py-2 border rounded-lg" required />
             </div>
+          <div className="flex space-x-4">
+
             <select value={data.typeTransport} onChange={e => handleChange('typeTransport', e.target.value)} className="flex-1 p-2 border rounded-lg">
               {Object.keys(brandsByType).map(type => <option key={type} value={type}>{type}</option>)}
             </select>
@@ -61,7 +71,7 @@ const EnregistrerEngin = () => {
             </select>
           </div>
           {/* Propriétaire */}
-          <h3 className="text-xl font-semibold">Informations Propriétaire</h3>
+          <h3 className="text-xl text-white font-semibold">Informations Propriétaire</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="relative">
               <User className="absolute top-3 left-3 text-gray-400" />
